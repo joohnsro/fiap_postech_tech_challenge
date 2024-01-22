@@ -8,9 +8,9 @@
     },
     "scripts": {
       "build": "rimraf ./build && tsc",
-      "start": "npm run build && node ./build/adapter/driver/index.js",
+      "start": "npm run build && node ./build/adapter/driving/api/index.js",
       "start:dev": "npx nodemon",
-      "test": "jest"
+      "test": "jest --watchAll"
     },
     "author": "",
     "license": "ISC",
