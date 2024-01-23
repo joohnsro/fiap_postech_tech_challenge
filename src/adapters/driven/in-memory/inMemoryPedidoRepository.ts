@@ -3,8 +3,8 @@ import { Pedido, Status } from "../../../core/domain/pedido";
 
 export default class InMemoryPedidoRepository implements PedidoRepository {
     private pedidos: Pedido[] = [
-        { id: 1, clienteId: 1, data: 1703793600, status: Status.Pronto, produtos: [ { produtoId: 1, quantidade: 2 }, { produtoId: 2, quantidade: 2 } ] },
-        { id: 2, clienteId: 2, data: 1703793900, status: Status.EmPreparacao, produtos: [ { produtoId: 1, quantidade: 1 } ] },
+        { id: 1, clienteId: 1, data: '2023-12-28 19:00:00', status: Status.Pronto, produtos: [ { produtoId: 1, quantidade: 2 }, { produtoId: 2, quantidade: 2 } ] },
+        { id: 2, clienteId: 2, data: '2023-12-28 19:40:00', status: Status.EmPreparacao, produtos: [ { produtoId: 1, quantidade: 1 } ] },
     ] 
     
     async pagaPedido(valor: number): Promise<boolean> {

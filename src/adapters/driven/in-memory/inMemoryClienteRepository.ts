@@ -32,6 +32,17 @@ export default class InMemoryClienteRepository implements ClienteRepository {
     }
 
     async encontraClientePorCPF(cpf: string): Promise<Cliente> {
-        return this.clientes.filter(cliente => cliente.cpf === cpf)[0]
+
+        if ( ! cpf ) {
+            throw new Error('CPF inválido.')
+        }
+
+        const busca = this.clientes.filter(cliente => cliente.cpf === cpf)
+
+        if ( busca.length === 0 ) {
+            throw new Error('Cliente não encontrado.')
+        }
+
+        return busca[0]
     }
 }

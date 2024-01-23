@@ -12,6 +12,6 @@ export interface Pedido {
     clienteId: number
     status: Status
     produtos: ProdutosPorPedido[]
-    data: number
+    data: string
     observacao?: string,
 }

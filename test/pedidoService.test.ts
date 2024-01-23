@@ -1,8 +1,8 @@
 import { describe, test, expect } from "@jest/globals"
 import { Pedido, Status } from "../src/core/domain/pedido"
-import InMemoryPedidoRepository from "../src/adapters/driven/in-memory/InMemoryPedidoRepository"
+import InMemoryPedidoRepository from "../src/adapters/driven/in-memory/inMemoryPedidoRepository"
 import PedidoService from "../src/core/application/services/pedidoService"
-import InMemoryProdutoRepository from "../src/adapters/driven/in-memory/InMemoryProdutoRepository"
+import InMemoryProdutoRepository from "../src/adapters/driven/in-memory/inMemoryProdutoRepository"
 import ProdutoService from "../src/core/application/services/produtoService"
 
 describe('Serviço de pedidos', () => {
@@ -10,7 +10,7 @@ describe('Serviço de pedidos', () => {
     test('Paga pedido', async () => {
         const pedido: Pedido = {
             clienteId: 1,
-            data: new Date().getTime(),
+            data: new Date().toISOString(),
             status: Status.Recebido,
             produtos: [
                 { produtoId: 1, quantidade: 1 },
