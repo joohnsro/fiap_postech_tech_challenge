@@ -1,0 +1,39 @@
+services:
+  api:
+    image: node:alpine
+    container_name: api
+    working_dir: /home/node/app
+    volumes:
+      - ../build:/home/node/app
+      - ../src/adapters/driving/api/node_modules:/home/node/app/node_modules
+      - ../src/adapters/driven/mariadb/node_modules:/home/node/app/adapters/driven/mariadb/node_modules
+    expose:
+      - "3000"
+    ports:
+      - 3000:3000
+    command: "node ./adapters/driving/api/index.js"
+    networks:
+      - default
+    restart: always
+    depends_on:
+      - mariadb
+  mariadb:
+    image: mariadb:10.6.4-focal
+    container_name: mariadb
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - ./mariadb/db_data:/var/lib/mysql
+      - ./mariadb/sql:/home/sql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=dGE9iy71a18xRbeNd6RCl2EKhqn656Oj
+      - MYSQL_DATABASE=tech_challenge
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ
+    ports:
+      - 3306:3306
+    networks:
+      - default
+networks:
+  default:
+    driver: bridge

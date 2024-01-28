@@ -2,7 +2,7 @@ import { Router } from "express"
 import clientes from "./clientes"
 
 const router = Router()
-router.get('/clientes', clientes.encontraClientePorCPF)
-router.post('/clientes', clientes.criaCliente)
+router.post('/cliente', clientes.criaCliente)
+router.get('/clientes/cpf', clientes.encontraClientePorCPF)
 
 export default router

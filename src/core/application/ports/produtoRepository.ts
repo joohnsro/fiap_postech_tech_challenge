@@ -1,10 +1,9 @@
-import { Produto, ProdutosPorPedido } from "../../domain/produto"
+import { ProdutoType } from "../../domain/produto"
 
 export default interface ProdutoRepository {
-    calculaValorTotalDosProdutos(listaProdutos: ProdutosPorPedido[]): Promise<number>
-    criaProduto(produto: Produto): Promise<number>
-    encontraProdutoPorId(produtoId: number): Promise<Produto>
-    atualizaProduto(produto: Produto): Promise<Produto>
+    criaProduto(produto: ProdutoType): Promise<number>
+    encontraProdutoPorId(produtoId: number): Promise<ProdutoType[]>
+    atualizaProduto(produto: ProdutoType): Promise<ProdutoType>
     removeProduto(produtoId: number): Promise<boolean>
-    listaProdutosPorCategoriaId(categoriaId: number): Promise<Produto[]>
+    listaProdutosPorCategoriaId(categoriaId: number): Promise<ProdutoType[]>
 }

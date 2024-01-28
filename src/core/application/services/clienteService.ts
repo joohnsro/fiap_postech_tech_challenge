@@ -1,14 +1,23 @@
 import ClienteRepository from "../ports/clienteRepository"
-import { Cliente } from "../../domain/cliente"
+import { Cliente, ClienteType } from "../../domain/cliente"
+import Cpf from "../../value-objects/cpf"
 
 export default class ClienteService {
     constructor(private readonly clienteRepository: ClienteRepository) {}
 
-    async criaCliente(cliente: Cliente) {
+    async criaCliente(data: ClienteType) {
+        const cliente = new Cliente(data)
         return await this.clienteRepository.criaCliente(cliente)
     }
 
-    async encontraClientePorCPF(cpf: string) {
-        return await this.clienteRepository.encontraClientePorCPF(cpf)
+    async encontraClientePorCPF(cpfString: string) {
+        const cpf = Cpf.criar(cpfString)
+        return await this.clienteRepository.encontraClientePorCPF(cpf.valor)
+            .then(response => {
+                if ( ! response ) {
+                    throw new Error(`Cliente não encontrado.`)
+                }
+                return response
+            })
     }
 }

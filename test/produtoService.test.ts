@@ -1,12 +1,12 @@
 import { describe, test, expect } from "@jest/globals"
-import { Produto } from "../src/core/domain/produto"
+import { ProdutoType } from "../src/core/domain/produto"
 import InMemoryProdutoRepository from "../src/adapters/driven/in-memory/inMemoryProdutoRepository"
 import ProdutoService from "../src/core/application/services/produtoService"
 
 describe('Serviços do produto', () => {
 
     test('Criar produto', async () => {
-        const produto: Produto = {
+        const data: ProdutoType = {
             nome: 'X Bacon',
             valor: 26.90,
             categoriaId: 1
@@ -15,12 +15,12 @@ describe('Serviços do produto', () => {
         const repository = new InMemoryProdutoRepository()
         const service = new ProdutoService(repository)
 
-        const produtoId = await service.criaProduto(produto)
+        const produtoId = await service.criaProduto(data)
         expect(produtoId).toBe(3)
     })
 
     test('Editar produto', async () => {
-        const produto: Produto = {
+        const data: ProdutoType = {
             id: 2,
             nome: 'Pepsi',
             valor: 7.50,
@@ -30,8 +30,8 @@ describe('Serviços do produto', () => {
         const repository = new InMemoryProdutoRepository()
         const service = new ProdutoService(repository)
 
-        const produtoAtualizado = await service.atualizaProduto(produto)
-        expect(JSON.stringify(produtoAtualizado)).toStrictEqual(JSON.stringify(produto))
+        const produtoAtualizado = await service.atualizaProduto(data)
+        expect(JSON.stringify(produtoAtualizado)).toStrictEqual(JSON.stringify(data))
     })
 
     test('Remover produto', async () => {

@@ -1,35 +1,49 @@
 import conexao from "../conexao";
-import { Pedido } from "../../../../core/domain/pedido";
+import { PedidoType, ProdutoPorPedidoType } from "../../../../core/domain/pedido";
 import PedidoRepository from "../../../../core/application/ports/pedidoRepository";
 
 export default class MariaDBPedidoRepository implements PedidoRepository {
 
-    async pagaPedido(valor: number): Promise<boolean> {
-        const pedidoPago = true
-        if ( ! pedidoPago ) {
-            throw new Error('Pagamento não autorizado.')
-        }
-
-        return true
-    }
-
-    async criaPedido(pedido: Pedido): Promise<number> {
+    async criaPedido(pedido: PedidoType): Promise<number> {
         const con = await conexao()
+        const { clienteId, status, observacao, valor } = pedido
         return await con.query(
-            `INSERT INTO pedidos (clientId, status, produtos, data, observacao) 
-            VALUES ('${pedido.clienteId}', '${pedido.status}', '${pedido.produtos}', '${pedido.data}', '${pedido.observacao}')`,
-            (err: Error, rows: Pedido[]) => {
+            `INSERT INTO pedidos (clienteId, status, observacao, valor) 
+            VALUES ('${clienteId}', '${status}', '${observacao}', ${valor})`,
+            (err: Error, rows: PedidoType[]) => {
                 if ( err ) return err;
                 return rows
             })
             .then((id: any) => id.insertId)
     }
 
-    async listaPedidos(): Promise<Pedido[]> {
+    async criaProdutoPorPedido(produto: ProdutoPorPedidoType): Promise<number> {
+        const con = await conexao()
+        const { pedidoId, produtoId, quantidade } = produto
+        return await con.query(
+            `INSERT INTO produtos_por_pedido (pedidoId, produtoId, quantidade) 
+            VALUES (${pedidoId}, ${produtoId}, ${quantidade})`,
+            (err: Error, rows: PedidoType[]) => {
+                if ( err ) return err;
+                return rows
+            })
+            .then((id: any) => id.insertId)
+    }
+
+    async listaPedidos(): Promise<PedidoType[]> {
         const con = await conexao()
         return await con.query(
-            `SELECT * FROM pedidos`,
-            (err: Error, rows: Pedido[]) => {
+            `SELECT p.id, c.nome, p.status, p.data, 
+            GROUP_CONCAT(CONCAT(ppp.quantidade,'-',prod.nome) SEPARATOR ',') as produtos, p.observacao, p.valor
+            FROM pedidos p
+            INNER JOIN produtos_por_pedido ppp
+                ON ppp.pedidoId = p.id
+            INNER JOIN produtos prod
+                ON ppp.produtoId = prod.id
+            INNER JOIN clientes c
+                ON p.clienteId = c.id
+            GROUP BY p.id ORDER BY p.data, p.id DESC`,
+            (err: Error, rows: PedidoType[]) => {
                 if ( err ) return err;
                 return rows
             })

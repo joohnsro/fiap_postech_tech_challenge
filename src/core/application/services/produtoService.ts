@@ -1,30 +1,40 @@
 import ProdutoRepository from "../ports/produtoRepository"
-import { Produto, ProdutosPorPedido } from "../../domain/produto"
+import { Produto, ProdutoType } from "../../domain/produto"
+import Id from "../../value-objects/id"
 
 export default class ProdutoService {
     constructor(private readonly produtoRepository: ProdutoRepository) {}
 
-    async calculaValorTotalDosProdutos(listaProdutos: ProdutosPorPedido[]): Promise<number> {
-        return await this.produtoRepository.calculaValorTotalDosProdutos(listaProdutos)
+    async encontraProdutoPorId(data: number): Promise<ProdutoType> {
+        const id = Id.criar(data)
+        return await this.produtoRepository.encontraProdutoPorId(id.valor)
+            .then(response => {
+                if ( ! response || ! response[0] ) {
+                    throw new Error('Produto não encontrado')
+                }
+                return response[0]
+            })
     }
 
-    async encontraProdutoPorId(produtoId: number): Promise<Produto> {
-        return await this.produtoRepository.encontraProdutoPorId(produtoId)
-    }
-
-    async criaProduto(produto: Produto): Promise<number> {
+    async criaProduto(data: ProdutoType): Promise<number> {
+        const produto = new Produto(data)
         return await this.produtoRepository.criaProduto(produto)
     }
 
-    async atualizaProduto(produto: Produto): Promise<Produto> {
+    async atualizaProduto(data: ProdutoType): Promise<ProdutoType> {
+        const id = Id.criar(data.id ? data.id : 0)
+        data.id = id.valor
+        const produto = new Produto(data)
         return await this.produtoRepository.atualizaProduto(produto)
     }
 
-    async removeProduto(produtoId: number): Promise<boolean> {
-        return await this.produtoRepository.removeProduto(produtoId)
+    async removeProduto(data: number): Promise<boolean> {
+        const id = Id.criar(data)
+        return await this.produtoRepository.removeProduto(id.valor)
     }
 
-    async listaProdutosPorCategoriaId(categoriaId: number): Promise<Produto[]> {
-        return await this.produtoRepository.listaProdutosPorCategoriaId(categoriaId)
+    async listaProdutosPorCategoriaId(data: number): Promise<ProdutoType[]> {
+        const id = Id.criar(data)
+        return await this.produtoRepository.listaProdutosPorCategoriaId(id.valor)
     }
 }

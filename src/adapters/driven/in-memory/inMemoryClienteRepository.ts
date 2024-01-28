@@ -1,18 +1,18 @@
-import { Cliente } from "../../../core/domain/cliente"
+import { ClienteType } from "../../../core/domain/cliente"
 import ClienteRepository from "../../../core/application/ports/clienteRepository"
 
 export default class InMemoryClienteRepository implements ClienteRepository {
     
-    private clientes: Cliente[] = [
+    private clientes: ClienteType[] = [
         { id: 1, nome: 'Fulano', cpf: '111.222.333-44' },
         { id: 2, nome: 'Ciclano', cpf: '555.666.777-88' },
     ]
 
-    async criaCliente(cliente: Cliente): Promise<number> {
+    async criaCliente(cliente: ClienteType): Promise<number> {
 
-        const tempClientes: Cliente[] = [...this.clientes]
+        const tempClientes: ClienteType[] = [...this.clientes]
         if ( tempClientes.length > 1 ) {
-            tempClientes.sort((a: Cliente, b: Cliente): any => {
+            tempClientes.sort((a: ClienteType, b: ClienteType): any => {
                 if ( a.id && b.id ) {
                     return a.id - b.id
                 } else {
@@ -31,7 +31,7 @@ export default class InMemoryClienteRepository implements ClienteRepository {
         return clienteId
     }
 
-    async encontraClientePorCPF(cpf: string): Promise<Cliente> {
+    async encontraClientePorCPF(cpf: string): Promise<ClienteType> {
 
         if ( ! cpf ) {
             throw new Error('CPF inválido.')

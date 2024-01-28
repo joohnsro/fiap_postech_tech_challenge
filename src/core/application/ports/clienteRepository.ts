@@ -1,6 +1,6 @@
-import { Cliente } from "../../domain/cliente"
+import { ClienteType } from "../../domain/cliente"
 
 export default interface ClienteRepository {
-    criaCliente(cliente: Cliente): Promise<number>
-    encontraClientePorCPF(cpf: string): Promise<Cliente>
+    criaCliente(cliente: ClienteType): Promise<number>
+    encontraClientePorCPF(cpf: string): Promise<ClienteType>
 }

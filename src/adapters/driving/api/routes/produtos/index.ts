@@ -3,9 +3,9 @@ import produtos from "./produtos"
 
 const router = Router()
 router.post('/produto', produtos.criaProduto)
-router.get('/produto/:productId', produtos.encontraProdutoPorId)
-router.put('/produto/:productId', produtos.atualizaProduto)
-router.delete('/produto/:productId', produtos.removeProduto)
-router.delete('/produtos/category/:categoryId', produtos.listaProdutosPorCategoriaId)
+router.get('/produto/:produtoId', produtos.encontraProdutoPorId)
+router.put('/produto/:produtoId', produtos.atualizaProduto)
+router.delete('/produto/:produtoId', produtos.removeProduto)
+router.get('/produtos/categoria', produtos.listaProdutosPorCategoriaId)
 
 export default router

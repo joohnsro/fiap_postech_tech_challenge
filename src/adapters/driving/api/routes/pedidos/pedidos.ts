@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
-import { Pedido } from "../../../../../core/domain/pedido"
-import InMemoryPedidoRepository from "../../../../driven/in-memory/inMemoryPedidoRepository"
+import { ProdutoPorPedidoType } from "../../../../../core/domain/pedido"
+import MariaDBPedidoRepository from "../../../../driven/mariadb/ports/mariaDBPedidoRepository"
 import PedidoService from "../../../../../core/application/services/pedidoService"
 
-const repository = new InMemoryPedidoRepository()
+const repository = new MariaDBPedidoRepository()
 const service = new PedidoService(repository)
 
 export default {
@@ -12,10 +12,21 @@ export default {
             .then(pedidos => res.send(pedidos))
             .catch(error => res.send({error: error.message}))
     },
-    criaPedido: async(req: Request, res: Response) => {
-        const pedido: Pedido = {...req.body}
+    checkout: async(req: Request, res: Response) => {
+        const {pedido, produtos} = req.body
+
+        const pedidoPago = true
+        if ( ! pedidoPago ) {
+            throw new Error('Pagamento não autorizado.')
+        }
+
         await service.criaPedido(pedido)
-            .then(pedidoId => res.send({id: pedidoId}))
+            .then(pedidoId => {
+                produtos.forEach(async (produto: ProdutoPorPedidoType) => {
+                    await service.criaProdutoPorPedido({...produto, pedidoId})
+                })
+                res.send({id: pedidoId})
+            })
             .catch(error => res.send({error: error.message}))
     }
 }

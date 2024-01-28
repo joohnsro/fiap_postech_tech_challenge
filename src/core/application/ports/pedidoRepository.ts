@@ -1,7 +1,7 @@
-import { Pedido } from "../../domain/pedido"
+import { PedidoType, ProdutoPorPedidoType } from "../../domain/pedido"
 
-export default interface PedidoService {
-    pagaPedido(valor: number): Promise<boolean>
-    criaPedido(pedido: Pedido): Promise<number>
-    listaPedidos(): Promise<Pedido[]>
+export default interface PedidoRepository {
+    criaPedido(pedido: PedidoType): Promise<number>
+    criaProdutoPorPedido(produtos: ProdutoPorPedidoType): Promise<number>
+    listaPedidos(): Promise<PedidoType[]>
 }
