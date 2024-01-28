@@ -1,15 +1,31 @@
 # Tech Challenge - RM352718
 
 <br />
-Apesar de não ser o ideal, já estão disponíveis neste repositório a build e os módulos, além de uma base de dados para a rápida execução da aplicação.
+Já está disponível uma base de dados para a rápida execução da aplicação.
 
 <br />
 
+* [Passos iniciais](#inicio)
 * [Ambiente completo com Dockerfile e linha de comando](#dockerfile)
 * [Ambiente completo com docker-compose](#docker-compose)
-* [Scripts disponíveis](#comandos)
+* [Outros scripts disponíveis](#scripts)
 
 <br />
+
+<h3 id="inicio">Passos iniciais</h3>
+
+1- Instala as dependências:
+```bash
+npm run install-environment
+```
+<br />
+
+2- Cria a build:
+```bash
+npm run build
+```
+<br />
+
 
 <h3 id="dockerfile">Ambiente completo com Dockerfile e linha de comando</h3>
 <br />
@@ -66,13 +82,7 @@ mariadb -u root -pdGE9iy71a18xRbeNd6RCl2EKhqn656Oj tech_challenge < /home/sql/da
 ```
 <br />
 
-<h3 id="comandos">Comandos disponíveis</h3>
-<br />
-
-Cria uma nova build da aplicação que será usada pelos contêineres:
-```bash
-npm run build
-```
+<h3 id="scripts">Outros scripts disponíveis</h3>
 <br />
 
 Executa a aplicação em modo de desenvolvimento com *hot reload*:

@@ -7,6 +7,9 @@
         "test": "test"
     },
     "scripts": {
+        "install-environment": "npm install && npm run adapter-install:mariadb && npm run adapter-install:api",
+        "adapter-install:mariadb": "npm --prefix ./src/adapters/driven/mariadb install",
+        "adapter-install:api": "npm --prefix ./src/adapters/driving/api install",
         "build": "rimraf ./build && tsc",
         "dev": "npx cross-env NODE_ENV=development nodemon",
         "test": "jest --watchAll"
