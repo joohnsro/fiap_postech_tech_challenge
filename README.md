@@ -1,7 +1,7 @@
 # Tech Challenge - RM352718
 
 <br />
-Para facilitar, uma build e uma base de dados já estão disponíveis para execução.
+Apesar de não ser o ideal, já estão disponíveis neste repositório a build e os módulos, além de uma base de dados para a rápida execução da aplicação.
 
 <br />
 
