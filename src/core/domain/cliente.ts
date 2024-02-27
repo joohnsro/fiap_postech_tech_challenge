@@ -19,13 +19,16 @@ export class Cliente extends AssertionConcern implements ClienteType {
 
     private validaEntidade() {
         Object.entries(this).forEach(([key, value]) => {
+            let pattern;
             switch (key) {
                 case 'nome':
                     this.SelfAssertArgumentNotEmpty(value, 'O cliente não possui um formato válido.')
+                    pattern = /^[a-zA-Z\s\.]*$/g;
+                    this.SelfAssertArgumentMatches(pattern, value, 'O cliente não possui um formato válido.')
                     break
                 case 'cpf':
                     this.SelfAssertArgumentNotEmpty(value, 'O cliente não possui um formato válido.')
-                    const pattern = /([0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2})/g;
+                    pattern = /([0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2})/g;
                     this.SelfAssertArgumentMatches(pattern, value, 'Cpf inválido.')
                     break
             }

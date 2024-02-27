@@ -56,6 +56,33 @@ export default class InMemoryPedidoRepository implements PedidoRepository {
 
         return produtoPorPedidoId;
     }
+    
+    async encontraPedido(pedidoId: number): Promise<PedidoType> {
+        const posicaoPedido = this.pedidos.map(item => item.id).indexOf(pedidoId)
+
+        if ( posicaoPedido === -1 ) {
+            throw new Error('Pedido não encontrado')
+        }
+
+        return this.pedidos[posicaoPedido]
+    }
+
+    async atualizaPedido(pedido: PedidoType): Promise<PedidoType> {
+        const buscaPedidoPorId = this.pedidos.filter(item => item.id === pedido.id)
+        if ( ! buscaPedidoPorId[0] ) {
+            throw new Error('Pedido não encontrado asasas')
+        }
+
+        this.pedidos.forEach(item => {
+            if ( item.id === pedido.id ) {
+                pedido.status = item.status
+                pedido.observacao = item.observacao
+                pedido.valor = item.valor
+            }
+        })
+
+        return this.pedidos.filter(item => item.id === pedido.id)[0]
+    }
 
     async listaPedidos(): Promise<PedidoType[]> {
         return this.pedidos

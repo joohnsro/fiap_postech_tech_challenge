@@ -30,6 +30,29 @@ export default class MariaDBPedidoRepository implements PedidoRepository {
             .then((id: any) => id.insertId)
     }
 
+    async encontraPedido(pedidoId: number): Promise<PedidoType> {
+        const con = await conexao()
+        return await con.query(
+            `SELECT *
+            FROM pedidos
+            WHERE pedidoId = ${pedidoId}`,
+            (err: Error, rows: PedidoType[]) => {
+                if ( err ) return err;
+                return rows
+            })
+    }
+
+    async atualizaPedido(pedido: PedidoType): Promise<PedidoType> {
+        const con = await conexao()
+        return await con.query(
+            `UPDATE pedido SET status = '${pedido.status}', observacao = '${pedido.observacao}', valor = '${pedido.valor}' WHERE id = ${pedido.id}`,
+            (err: Error, rows: PedidoType[]) => {
+                if ( err ) return err;
+                return rows
+            })
+            .then((id: any) => id.insertId)
+    }
+
     async listaPedidos(): Promise<PedidoType[]> {
         const con = await conexao()
         return await con.query(
@@ -42,7 +65,7 @@ export default class MariaDBPedidoRepository implements PedidoRepository {
                 ON ppp.produtoId = prod.id
             INNER JOIN clientes c
                 ON p.clienteId = c.id
-            GROUP BY p.id ORDER BY p.data, p.id DESC`,
+            GROUP BY p.id ORDER BY p.data ASC`,
             (err: Error, rows: PedidoType[]) => {
                 if ( err ) return err;
                 return rows

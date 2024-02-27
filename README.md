@@ -5,14 +5,49 @@ Já está disponível uma base de dados para a rápida execução da aplicação
 
 <br />
 
-* [Passos iniciais](#inicio)
+* [Descrição do projeto](#descricao)
+* [Entregáveis](#entregaveis)
+* [Passo-a-passo de instalação](#instalacao)
 * [Ambiente completo com Dockerfile e linha de comando](#dockerfile)
 * [Ambiente completo com docker-compose](#docker-compose)
 * [Outros scripts disponíveis](#scripts)
 
 <br />
 
-<h3 id="inicio">Passos iniciais</h3>
+<h3 id="descricao">Descrição do projeto</h3>
+
+Há uma lanchonete que está expandindo, sem um sistema de controle de pedidos, o atendimento é caótico e confuso.<br />
+Para solucionar o problema, a lanchonete precisa de um sistema de autoatendimento de fast food.
+<br />
+
+<h3 id="entregaveis">Entregáveis</h3>
+
+- Documentação do sistema (DDD) utlizando a linguagem úbiqua, dos seguintes fluxos:<br />
+a. Realização do pedido e pagamento<br />
+b. Preparação e entrega do pedido<br />
+
+- Uma aplicação para todo sistema de backend (monolito) que deverpa ser desenvolvido seguindo os padrões apresentados nas aulas:<br />
+    - a. Utilizando arquitetura hexagonal
+    - b. APIs
+        - Cadastro do Cliente
+        - Identificação do Cliente via CPF
+        - Criar, editar e remover produto
+        - Buscar produtos por categoria
+        - Fake checkout, apenas enviar os produtos escolhidos para a fila
+        - Listar os pedidos
+    - c. Aplicação deverá ser escalável para atender grandes volumes nos horário de pico
+    - d. banco de dados a sua escolha
+        - Inicialmente deveremos trabalhar e organizar a fila dos pedidos apenas em banco de dados
+
+- A aplicação deve ser entregue com um Dockerfile configurado para executá-la corretamente.
+    - Para validação da POC, temos a seguinte limitação de infraestrutura:
+        - 1 instância para banco de dados
+        - 1 instância para executar aplicação
+    - Não será necessário o desenvolvimento de interfaces para o frontend, o foco deve ser total no backend
+<br /><br />
+
+
+<h3 id="instalacao">Passo-a-passo de instalação</h3>
 
 1- Instala as dependências:
 ```bash

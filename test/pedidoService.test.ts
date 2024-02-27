@@ -35,6 +35,29 @@ describe('Serviço de pedidos', () => {
         expect(produtoPorPedidoId).toBe(3)
     })
 
+    test('Encontra pedido', async () => {
+        const repository = new InMemoryPedidoRepository()
+        const service = new PedidoService(repository)
+
+        const id = 1
+        const pedido = await service.encontraPedido(id)
+
+        expect(pedido.clienteId).toBe(1)
+    })
+
+    test('Altera status do pedido', async () => {
+        const repository = new InMemoryPedidoRepository()
+        const service = new PedidoService(repository)
+
+        const id = 1
+        const status = Status.Pronto
+        const pedido = await service.encontraPedido(id)
+        pedido.status = status
+        const pedidoAtualizado = await service.atualizaPedido(pedido)
+        
+        expect(pedidoAtualizado.status).toBe(Status.Pronto)
+    })
+
     test('Lista pedidos', async () => {
         const repository = new InMemoryPedidoRepository()
         const service = new PedidoService(repository)
