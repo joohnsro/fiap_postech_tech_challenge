@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tech-challenge-api
+  labels:
+    app: tech-challenge-api
+spec:
+  template:
+    metadata:
+      name: tech-challenge-api
+      labels:
+        app: tech-challenge-api
+    spec:
+      containers:
+      - name: tech-challenge-api-container
+        image: joohnsro/tech-challenge-api:1.18
+        env: 
+        - name: MARIADB_HOST
+          value: 10.244.1.63
+        - name: MARIADB_USER
+          value: admin
+        - name: MARIADB_PASSWORD
+          value: OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ
+        - name: MARIADB_DATABASE
+          value: tech_challenge
+        ports:
+          - containerPort: 3000
+        resources:
+          requests:
+            cpu: 1m
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tech-challenge-api

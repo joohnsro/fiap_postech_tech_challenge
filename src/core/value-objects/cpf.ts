@@ -1,14 +1,10 @@
-import AssertionConcern from "../application/asserts/assertionConcern";
+import AssertionConcern from "../../common/asserts/assertionConcern";
 
-interface CpfType {
-    valor: string
-}
-
-export default class Cpf implements CpfType {
-    public valor: string
+export default class Cpf {
+    private readonly _valor: string
 
     private constructor(cpf: string) {
-        this.valor = cpf
+        this._valor = cpf
     }
 
     public static criar(cpf: string): Cpf {
@@ -16,7 +12,10 @@ export default class Cpf implements CpfType {
         const pattern = /(\d{3}\.\d{3}\.\d{3}-\d{2})/g;
         AssertionConcern.AssertArgumentMatches(pattern, cpf, "Cpf inválido.")
         AssertionConcern.AssertArgumentNotEquals(cpf.length, 14, "Cpf inválido.")
-
         return new Cpf(cpf)
+    }
+
+    get valor() {
+        return this._valor
     }
 }

@@ -5,18 +5,23 @@ services:
     working_dir: /home/node/app
     volumes:
       - ../build:/home/node/app
-      - ../src/adapters/driving/api/node_modules:/home/node/app/node_modules
-      - ../src/adapters/driven/mariadb/node_modules:/home/node/app/adapters/driven/mariadb/node_modules
+      - ../node_modules:/home/node/app/node_modules
     expose:
       - "3000"
     ports:
       - 3000:3000
-    command: "node ./adapters/driving/api/index.js"
+    command: "node ./external/api/index.js"
     networks:
       - default
     restart: always
     depends_on:
       - mariadb
+    environment:
+      - MARIADB_HOST=mariadb
+      - MARIADB_PORT=3306
+      - MARIADB_DATABASE=tech_challenge
+      - MARIADB_USER=admin
+      - MARIADB_PASSWORD=OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ
   mariadb:
     image: mariadb:10.6.4-focal
     container_name: mariadb

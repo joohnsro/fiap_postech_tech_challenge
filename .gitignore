@@ -1,4 +1,2 @@
 node_modules
-src/adapters/driven/mariadb/node_modules
-src/adapters/driving/api/node_modules
 build

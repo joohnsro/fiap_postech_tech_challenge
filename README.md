@@ -1,15 +1,12 @@
 # Tech Challenge - RM352718
 
 <br />
-Já está disponível uma base de dados para a rápida execução da aplicação.
-
-<br />
 
 * [Descrição do projeto](#descricao)
 * [Entregáveis](#entregaveis)
+* [Arquitetura](#arquitetura)
 * [Passo-a-passo de instalação](#instalacao)
-* [Ambiente completo com Dockerfile e linha de comando](#dockerfile)
-* [Ambiente completo com docker-compose](#docker-compose)
+* [Durante a utilização da coleção da API](#utilizacao)
 * [Outros scripts disponíveis](#scripts)
 
 <br />
@@ -22,105 +19,136 @@ Para solucionar o problema, a lanchonete precisa de um sistema de autoatendiment
 
 <h3 id="entregaveis">Entregáveis</h3>
 
-- Documentação do sistema (DDD) utlizando a linguagem úbiqua, dos seguintes fluxos:<br />
-a. Realização do pedido e pagamento<br />
-b. Preparação e entrega do pedido<br />
+- Atualizar a aplicação da FASE 1 refatorando o código para seguir os padrões clean code e clean architecture:<br />
+    - Alterar/criar as APIs
+        - [x] Checkout Pedido deverá receber os produtos solicitados e retornar a identificação do pedido
+        - [x] Consultar status pagamento pedido, que informa se o pagamento foi aprovado ou não
+        - [x] Webhook para receber informação de pagamento aprovado ou recusado
+        - [x] A lista de pedidos deverá retorná-lo com suas descrições, ordenados com a seguinte regra:
+            - [x] Pronto > Em Preparação > Recebido
+            - [x] Pedidos mais antigos primeiro e mais novos depois
+            - [x] Pedidos com status Finalizado não devem aparecer na lista
+        - [x] Atualizar o status do pedido
+        - [x] Como desafio extra, opcionalmente, implementar a integração com Mercado Pago para gerar o QRCode para pagamento e integrar com o WebHook para capturar os pagamentos. Caso contrário, será necessário realiza o mock da parte de pagamentos. Como referência, acesse: site do mercado pago
+        
+- Criar uma arquitetura em Kubernetes que atenda os seguinte requisitos
+    - [x] Os requisitos funcionais descritos nos itens anteriores (item problema)
+    - [x] Escalabilidade com aumento e diminuição de Pods conforme demanda
+    - [x] Os arquivos manifestos (yaml) precisam estar no GitHub junto com a nova versão do código
 
-- Uma aplicação para todo sistema de backend (monolito) que deverpa ser desenvolvido seguindo os padrões apresentados nas aulas:<br />
-    - a. Utilizando arquitetura hexagonal
-    - b. APIs
-        - Cadastro do Cliente
-        - Identificação do Cliente via CPF
-        - Criar, editar e remover produto
-        - Buscar produtos por categoria
-        - Fake checkout, apenas enviar os produtos escolhidos para a fila
-        - Listar os pedidos
-    - c. Aplicação deverá ser escalável para atender grandes volumes nos horário de pico
-    - d. banco de dados a sua escolha
-        - Inicialmente deveremos trabalhar e organizar a fila dos pedidos apenas em banco de dados
+- Entrega da seguinte documentação no ReadMe:
+    - [x] Desenho da arquitetura pensado por você, pessoa arquiteta de software, contemplando:
+        - [x] Os requisitos do negócio (problema)
+        - [x] Os requisitos de infraestrutura
+            - [x] Você pode utiliza o Minikube, Docker Kubernetes, AKS,EKS, GKE ou qualquer nuvem que você desenha
+    - [x] Collection com todas as APIs desenvolvidas com exemplo de requisição (que não seja vazia):
+        - [x] Link do Swagger no projeto ou link para download da collection do Postman (JSON)
+    - [x] Guia completo com todas as instruções para execução do projeto e a ordem de execução das APIs, caso seja necessário
+    - [x] Link para vídeo demonstrando a arquitetura desenvolvida na nuvem ou localmente
+        - [x] O vídeo deve ser postado no Youtube ou Vimeo
+        - [x] Não esqueça de deixá-lo público ou não listado
 
-- A aplicação deve ser entregue com um Dockerfile configurado para executá-la corretamente.
-    - Para validação da POC, temos a seguinte limitação de infraestrutura:
-        - 1 instância para banco de dados
-        - 1 instância para executar aplicação
-    - Não será necessário o desenvolvimento de interfaces para o frontend, o foco deve ser total no backend
+- No arquivo entregue na plataforma, é necessário somente colocar a URL do Github com as informações
 <br /><br />
 
 
+<h3 id="arquitetura">Desenhos da Arquitetura</h3>
+
+- Os requisitos do negócio (problema):
+    - Acessar arquivo na pasta: <br />
+        arquitetura/arquitetura-requisitos-do-negocio.png
+- Os requisitos de infraestrutura:
+    - Acessar arquivo na pasta: <br />
+        arquitetura/arquitetura-requisitos-de-infraestrutura.png
+<br /><br />
+
 <h3 id="instalacao">Passo-a-passo de instalação</h3>
 
-1- Instala as dependências:
+***Observação**<br />
+Para a criação e implementação do projeto foi utilizado o Minikube à partir de um Docker Client do Windows.
+<br />
+
+0- Verifica e cria as métricas para utilização:
 ```bash
-npm run install-environment
+// Checa métricas
+kubectl top node
+
+// Em caso de não encontrar métricas, criar usando:
+kubectl apply -f kubernetes/metrics.yaml
+```
+
+1- Cria um POD e Service do banco de dados:
+```bash
+kubectl apply -f kubernetes/mariadb/mariadb-pod.yaml
+kubectl apply -f kubernetes/mariadb/mariadb-service.yaml
 ```
 <br />
 
-2- Cria a build:
+2- Acessar e popular banco de dados:
 ```bash
-npm run build
+// Acessa o pod
+kubectl exec -it mariadb-pod sh
+
+// Acessa o MariaDB
+mariadb -u admin -pOTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ
+
+// Define o banco corretamente
+use tech_challenge;
+
+// Copia, cole e execute todo o conteúdo do arquivo disponibilizado em:
+// kubernetes/mariadb/database.sql
 ```
 <br />
 
-
-<h3 id="dockerfile">Ambiente completo com Dockerfile e linha de comando</h3>
-<br />
-
-1 - Cria a rede:
+3- Captura o podIP do POD do banco de dados:
 ```bash
-docker network create --driver bridge tech_challenge_net
+kubectl get pods -l app=mariadb-pod -o yaml | grep podIP
+
+// Retornará algo como:
+// podIp: 10.244.1.63
 ```
 <br />
 
-2 - Cria o container responsável pelo banco de dados:
-
+4- Atualiza o arquivo de deployment da api com o novo IP do banco de dados:
 ```bash
-# O comando $(pwd -W) está disponível no Windows, 
-# em caso de utilização em outro sistema operacional pode se fazer
-# necessário alterá-lo para ${PWD} ou similar, de acordo com o sistema escolhido
-docker run --detach --network tech_challenge_net -p 3306:3306 -v "$(pwd -W)/docker/mariadb/db_data:/var/lib/mysql" -v "$(pwd -W)/docker/mariadb/sql:/home/sql" --name mariadb --env MARIADB_USER=admin --env MARIADB_PASSWORD=OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ --env MARIADB_ROOT_PASSWORD=dGE9iy71a18xRbeNd6RCl2EKhqn656Oj --env MARIADB_DATABASE=tech_challenge mariadb:10.6.4-focal
+// kubernetes/api/deployment.yaml
+    ...
+    env: 
+        - name: MARIADB_HOST
+          value: 10.244.1.63
+    ...
 ```
 <br />
 
-3 - Cria a imagem responsável pela api:
-
+5- Cria um POD, Service e HPA (para escalar aplicação quando necessário) da api:
 ```bash
-docker build -t api -f ./docker/api/Dockerfile .
+kubectl apply -f kubernetes/api/deployment.yaml
+kubectl apply -f kubernetes/api/hpa.yaml
+kubectl apply -f kubernetes/api/service.yaml
 ```
 <br />
 
-4 - Cria o container responsável pela api:
-
+6- Disponibiliza o Service da API para utilização e exibe a url da aplicação:
 ```bash
-docker run --detach --network tech_challenge_net -p 3000:3000 --name api api
+minikube service tech-challenge-api-service --url
 ```
 <br />
 
-<h3 id="docker-compose">Ambiente completo com docker-compose</h3>
+7- Com a url em mãos atualizar a variável *api_host* da coleção do Postman para execução.
+<br /><br />
 
-1 - Cria o ambiente completo:
-```bash
-docker compose -p tech_challenge -f ./docker/docker-environment.yml up --detach
-```
+<h3 id="utilizacao">Durante a utilização da coleção da API</h3>
 <br />
 
-
-**OPCIONAL**<br />
-Caso não tenha dados no banco será necessário executar a seguintes ações:
+O sistema de pagamento foi mockado, sendo assim para simular o retorno esperado do pagamento foi criado a rota webhook/pagamento.<br />
+Assim como exemplicado na coleção, tanto o pedidoId quanto o status serão necessários para a exemplificação do funcionamento, tendo apenas o status "APRO" disponível no momento.
 <br />
 
-```bash
-# Abre o terminal do container
-docker exec -it mariadb bash
-
-# Popula a base de dados
-mariadb -u root -pdGE9iy71a18xRbeNd6RCl2EKhqn656Oj tech_challenge < /home/sql/database.sql
-```
-<br />
 
 <h3 id="scripts">Outros scripts disponíveis</h3>
 <br />
 
-Executa a aplicação em modo de desenvolvimento com *hot reload*:
+Executa a aplicação em modo de desenvolvimento com *hot reload*, em caso de uso será necessário alterar o arquivo *nodemon.json* com as variáveis de ambiente corretas:
 ```bash
 npm run dev
 ```
@@ -128,5 +156,17 @@ npm run dev
 
 Executa os testes unitários da aplicação:
 ```bash
-npm run jest
+npm run test
+```
+<br />
+
+Executa o teste de carga usando k6:
+```bash
+npm run k6
+```
+<br />
+
+Gera um build da aplicação:
+```bash
+npm run build
 ```

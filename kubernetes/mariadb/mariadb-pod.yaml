@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mariadb-pod
+  labels:
+    app: mariadb-pod
+spec:
+  containers:
+    - name: mariadb
+      image: mariadb:10.6.4-focal
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: dGE9iy71a18xRbeNd6RCl2EKhqn656Oj
+        - name: MYSQL_DATABASE
+          value: tech_challenge
+        - name: MYSQL_USER
+          value: admin
+        - name: MYSQL_PASSWORD
+          value: OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ
+      ports:
+        - containerPort: 3306
+      volumeMounts:
+        - name: shared
+          mountPath: /var/lib/mysql
+  volumes:
+  - name: shared
+    hostPath:
+      path: /data
+      type: Directory

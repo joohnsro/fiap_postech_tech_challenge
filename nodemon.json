@@ -2,5 +2,12 @@
     "watch": ["src"],
     "ext": ".ts,.js",
     "ignore": [],
-    "exec": "npx ts-node ./src/adapters/driving/api/index.ts"
+    "exec": "npx ts-node ./src/external/api/index.ts",
+    "env": {
+        "MARIADB_HOST": "mariadb",
+        "MARIADB_PORT": "3306",
+        "MARIADB_DATABASE": "tech_challenge",
+        "MARIADB_USER": "admin",
+        "MARIADB_PASSWORD": "OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ"
+    }
 }

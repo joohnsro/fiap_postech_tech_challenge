@@ -7,12 +7,10 @@
         "test": "test"
     },
     "scripts": {
-        "install-environment": "npm install && npm run adapter-install:mariadb && npm run adapter-install:api",
-        "adapter-install:mariadb": "npm --prefix ./src/adapters/driven/mariadb install",
-        "adapter-install:api": "npm --prefix ./src/adapters/driving/api install",
         "build": "rimraf ./build && tsc",
         "dev": "npx cross-env NODE_ENV=development nodemon",
-        "test": "jest --watchAll"
+        "test": "jest --watchAll",
+        "k6": "k6 run .\\k6\\index.js --vus 10 --duration 60s"
     },
     "author": "",
     "license": "ISC",
@@ -31,7 +29,10 @@
         "typescript": "^5.3.3"
     },
     "dependencies": {
+        "@types/express": "^4.17.21",
         "cross-env": "^7.0.3",
-        "k6": "^0.0.0"
+        "express": "^4.18.3",
+        "k6": "^0.0.0",
+        "mariadb": "^3.2.3"
     }
 }
