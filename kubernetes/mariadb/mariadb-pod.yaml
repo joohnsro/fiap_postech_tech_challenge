@@ -10,13 +10,25 @@ spec:
       image: mariadb:10.6.4-focal
       env:
         - name: MYSQL_ROOT_PASSWORD
-          value: dGE9iy71a18xRbeNd6RCl2EKhqn656Oj
+          valueFrom:
+            configMapKeyRef:
+              name: environment-data
+              key: mysql_root_password
         - name: MYSQL_DATABASE
-          value: tech_challenge
+          valueFrom:
+            configMapKeyRef:
+              name: environment-data
+              key: mysql_database
         - name: MYSQL_USER
-          value: admin
+          valueFrom:
+            configMapKeyRef:
+              name: environment-data
+              key: mysql_user
         - name: MYSQL_PASSWORD
-          value: OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ
+          valueFrom:
+            configMapKeyRef:
+              name: environment-data
+              key: mysql_password
       ports:
         - containerPort: 3306
       volumeMounts:

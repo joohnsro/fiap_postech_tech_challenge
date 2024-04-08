@@ -77,14 +77,20 @@ kubectl top node
 kubectl apply -f kubernetes/metrics.yaml
 ```
 
-1- Cria um POD e Service do banco de dados:
+1- Cria um ConfigMap com os dados sensíveis:
+```bash
+kubectl apply -f kubernetes/configmap.yaml
+```
+<br />
+
+2- Cria um POD e Service do banco de dados:
 ```bash
 kubectl apply -f kubernetes/mariadb/mariadb-pod.yaml
 kubectl apply -f kubernetes/mariadb/mariadb-service.yaml
 ```
 <br />
 
-2- Acessar e popular banco de dados:
+3- Acessar e popular banco de dados:
 ```bash
 // Acessa o pod
 kubectl exec -it mariadb-pod sh
@@ -100,7 +106,7 @@ use tech_challenge;
 ```
 <br />
 
-3- Captura o podIP do POD do banco de dados:
+4- Captura o podIP do POD do banco de dados:
 ```bash
 kubectl get pods -l app=mariadb-pod -o yaml | grep podIP
 
@@ -109,7 +115,7 @@ kubectl get pods -l app=mariadb-pod -o yaml | grep podIP
 ```
 <br />
 
-4- Atualiza o arquivo de deployment da api com o novo IP do banco de dados:
+5- Atualiza o arquivo de deployment da api com o novo IP do banco de dados:
 ```bash
 // kubernetes/api/deployment.yaml
     ...
@@ -120,7 +126,7 @@ kubectl get pods -l app=mariadb-pod -o yaml | grep podIP
 ```
 <br />
 
-5- Cria um POD, Service e HPA (para escalar aplicação quando necessário) da api:
+6- Cria um POD, Service e HPA (para escalar aplicação quando necessário) da api:
 ```bash
 kubectl apply -f kubernetes/api/deployment.yaml
 kubectl apply -f kubernetes/api/hpa.yaml
@@ -128,13 +134,13 @@ kubectl apply -f kubernetes/api/service.yaml
 ```
 <br />
 
-6- Disponibiliza o Service da API para utilização e exibe a url da aplicação:
+7- Disponibiliza o Service da API para utilização e exibe a url da aplicação:
 ```bash
 minikube service tech-challenge-api-service --url
 ```
 <br />
 
-7- Com a url em mãos atualizar a variável *api_host* da coleção do Postman para execução.
+8- Com a url em mãos atualizar a variável *api_host* da coleção do Postman para execução.
 <br /><br />
 
 <h3 id="utilizacao">Durante a utilização da coleção da API</h3>

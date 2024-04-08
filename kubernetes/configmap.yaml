@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: environment-data
+data:
+  mysql_root_password: "dGE9iy71a18xRbeNd6RCl2EKhqn656Oj"
+  mysql_host: "10.244.1.179"
+  mysql_user: "admin"
+  mysql_password: "OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ"
+  mysql_database: "tech_challenge"

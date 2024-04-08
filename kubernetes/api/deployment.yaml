@@ -14,15 +14,27 @@ spec:
       containers:
       - name: tech-challenge-api-container
         image: joohnsro/tech-challenge-api:1.18
-        env: 
-        - name: MARIADB_HOST
-          value: 10.244.1.63
-        - name: MARIADB_USER
-          value: admin
-        - name: MARIADB_PASSWORD
-          value: OTIsxb71HcC0WyA1UPNIzcvuMJ1Xu6NJ
-        - name: MARIADB_DATABASE
-          value: tech_challenge
+        env:
+          - name: MARIADB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: environment-data
+                key: mysql_host
+          - name: MARIADB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: environment-data
+                key: mysql_database
+          - name: MARIADB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: environment-data
+                key: mysql_user
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: environment-data
+                key: mysql_password
         ports:
           - containerPort: 3000
         resources:
